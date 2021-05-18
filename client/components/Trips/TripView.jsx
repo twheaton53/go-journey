@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Container, Button } from 'react-bootstrap';
 
-const TripView = ( { trip, setShowTrip } ) => (
+const TripView = ( { trip, setShowTrip, displayModal } ) => (
   <Container className="trip-view">
     <Row>
       <h3>Our {trip.location} Vacation!</h3>
@@ -24,7 +24,8 @@ const TripView = ( { trip, setShowTrip } ) => (
     </Row>
     <Row>
       <Button aria-label="select trip" name={trip.location} value={trip}className="trip-button" onClick={setShowTrip}>Select Trip</Button>
-      <Button className="trip-button" aria-label="Delete a Trip">Delete a Trip</Button>
+      <Button aria-label="Invite someone to trip" name="invite" className="trip-button" onClick={displayModal}>Invite Someone to Trip!</Button>
+      <Button className="trip-button" aria-label="Delete a Trip">Delete Trip</Button>
     </Row>
   </Container>
 );
