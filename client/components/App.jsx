@@ -28,7 +28,7 @@ class App extends React.Component {
       this.setState({
         showTrip: false,
         trip: {}
-      }, () => console.log('triggered'));
+      });
     } else {
       let selectedTrip = null;
       for (const property in tripData) {
