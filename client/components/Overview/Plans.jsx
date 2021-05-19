@@ -19,7 +19,7 @@ class Plans extends React.Component {
           <Card.Title>{plan.title}</Card.Title>
           <Card.Subtitle>{plan.time}</Card.Subtitle>
           <Card.Text>{plan.notes}</Card.Text>
-          <Card.Text>{plan.attending}</Card.Text>
+          <Card.Text>Attending:&nbsp;{plan.attending}</Card.Text>
         </Card.Body>
       </Card>
     )

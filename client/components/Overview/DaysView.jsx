@@ -29,7 +29,7 @@ const DaysView = ( { day, viewItinerary, dayId } ) => {
                   <p key={index}>{plan.title}</p>
                   <p>{plan.time}</p>
                   <p>{plan.notes}</p>
-                  <p>{plan.attending}</p>
+                  <p>Attending:&nbsp;{plan.attending}</p>
                 </>
               ))}
               </div>
@@ -61,7 +61,7 @@ const DaysView = ( { day, viewItinerary, dayId } ) => {
                   <p key={index}>{plan.title}</p>
                   <p>{plan.time}</p>
                   <p>{plan.notes}</p>
-                  <p>{plan.attending}</p>
+                  <p>Attending:&nbsp;{plan.attending}</p>
                 </>
               ))}
               </div>

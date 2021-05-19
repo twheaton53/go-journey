@@ -87,13 +87,6 @@ class Overview extends React.Component {
                 <Button aria-label="back" className="back-button" name="back" onClick={setShowTrip}>Back</Button>
               </Container>
             </Col>
-            {/* <Col>
-              <Container>
-                <Collapse in={displayItinerary}>
-                  <ItineraryList itinerary={itinerary} />
-                </Collapse>
-              </Container>
-            </Col> */}
           </Row>
         </>
       )
