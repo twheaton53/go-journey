@@ -8,7 +8,7 @@ const Trips = ( { trips, setShowTrip, displayModal } ) => (
         <TripView trip={trip} key={index} setShowTrip={setShowTrip} displayModal={displayModal} />
       ))}
       <Row>
-        <Button className="trip-button" aria-label="Add a Trip" >Add a Trip</Button>
+        <Button className="trip-button" aria-label="Add a Trip" name="makeTrip" onClick={displayModal} >Add a Trip</Button>
       </Row>
   </>
 );

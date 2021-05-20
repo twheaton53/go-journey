@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Collapse, Row, Col, Container, Card } from 'react-bootstrap';
 
 const DaysView = ( { day, viewItinerary, dayId } ) => {
+  console.log('day in DaysView is ', day);
   const [open, setOpen] = useState(false);
   const [itinerary, setItinerary] = useState(day.itinerary);
 
@@ -18,7 +19,10 @@ const DaysView = ( { day, viewItinerary, dayId } ) => {
                 <>{person}, &nbsp;</>
                 ))}
             </Card.Text>
+            <Row>
+            <Button aria-label="Edit day" className="itinerary-button" name={day.id}>Edit</Button>
             <Button aria-label="see itinerary" className="itinerary-button" name={day.id} onClick={viewItinerary}>See Itinerary</Button>
+            </Row>
             </Card.Body>
         </Card>
         <Container>
@@ -50,7 +54,10 @@ const DaysView = ( { day, viewItinerary, dayId } ) => {
                 <>{person}, &nbsp;</>
                 ))}
             </Card.Text>
-            <Button aria-label="see itinerary" className="itinerary-button" name={day.id} onClick={viewItinerary}>See Itinerary</Button>
+            <Row>
+              <Button aria-label="Edit day" className="itinerary-button" name={day.id}>Edit</Button>
+              <Button aria-label="see itinerary" className="itinerary-button" name={day.id} onClick={viewItinerary}>See Itinerary</Button>
+            </Row>
             </Card.Body>
         </Card>
         <Container>

@@ -25,7 +25,7 @@ const createTrips = `
   DROP TABLE IF EXISTS ${trips};
   CREATE TABLE IF NOT EXISTS ${trips} (
     id SERIAL PRIMARY KEY,
-    location VARCHAR(255) NOT NULL,
+    destination VARCHAR(255) NOT NULL,
     arrivalDate DATE NOT NULL,
     arrivalFlight VARCHAR(255),
     departureDate DATE NOT NULL,
@@ -37,7 +37,7 @@ const createDays = `
   CREATE TABLE IF NOT EXISTS ${days} (
     id SERIAL PRIMARY KEY,
     id_Trips INT REFERENCES ${trips}(id),
-    title VARCHAR(1000) NOT NULL,
+    title VARCHAR(1000),
     date DATE NOT NULL
   );`;
 

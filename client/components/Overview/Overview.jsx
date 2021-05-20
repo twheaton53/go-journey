@@ -1,5 +1,6 @@
 import React from 'react';
 import { Collapse, Card, Container, Col, Row, Button, Form } from 'react-bootstrap';
+import ReactModal from 'react-modal';
 import DaysList from './DaysList.jsx';
 import ItineraryList from './ItineraryList.jsx';
 
@@ -9,21 +10,33 @@ class Overview extends React.Component {
 
     this.state = {
       trip: props.trip,
+      days: props.trip.days,
       dayId: null,
       displayItinerary: false,
       displayPlanMaker: false,
+      displayDayMaker: false,
       itinerary: []
     }
 
     this.handleClick = this.handleClick.bind(this);
     this.handlePlan = this.handlePlan.bind(this);
     this.closeForm = this.closeForm.bind(this);
+    this.displayModal = this.displayModal.bind(this);
+    this.makeDay = this.makeDay.bind(this);
   }
 
   closeForm = (e) => {
     e.preventDefault();
     this.setState({
-      displayPlanMaker: false
+      displayPlanMaker: false,
+      displayDayMaker: false
+    });
+  }
+
+  displayModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      displayDayMaker: true
     });
   }
 
@@ -62,28 +75,189 @@ class Overview extends React.Component {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const formDataObj = Object.fromEntries(formData.entries());
-    console.log(formDataObj);
-    console.log(itinerary)
 
     const newItinerary = itinerary.concat(formDataObj);
     this.setState({
       itinerary: newItinerary,
       displayPlanMaker: false
     });
+
+    // if (e.target.name === 'dayMaker') {
+    //   const newDays = days.concat(formDataObj);
+    //   this.setState({
+    //     days: newDays
+    //   });
+    // }
+  }
+
+  makeDay = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    let count = 0;
+    const { days } = this.state;
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const formDataObj = Object.fromEntries(formData.entries());
+
+    const dateObj = new Date(formDataObj.date);
+    const date = dateObj.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    const attendingArray = formDataObj.attending.split(' ');
+
+    const daysObj = {
+      id: count,
+      title: formDataObj.title,
+      date: date,
+      attending: attendingArray,
+      itinerary: []
+    }
+
+    const newDays = days.concat(daysObj);
+    console.log(newDays);
+    this.setState({
+      days: newDays,
+      displayDayMaker: false
+    });
   }
 
   render() {
-    const { trip, displayItinerary, displayPlanMaker, itinerary, dayId } = this.state;
+    const { trip, days, displayItinerary, displayPlanMaker, displayDayMaker, itinerary, dayId } = this.state;
+    console.log(trip);
     const { setShowTrip } = this.props;
+
+    if(trip.days.length === 0) {
+      return (
+        <>
+          <h1 className="go-journey">Go Journey!</h1>
+          <h3 className="go-journey">Let's Add Some Days!</h3>
+          <Button aria-label="add a day" className="trip-button" name="addDay" onClick={this.displayModal}>Add a Day</Button>
+          <ReactModal
+            isOpen={displayDayMaker}
+            contentLabel="Plan a Journey!"
+            style={{
+              overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              content: {
+                backgroundColor: '#bcb8b1',
+                fontFamily: 'Crimson Pro, serif',
+              },
+            }}
+          >
+            <Form onSubmit={this.makeDay}>
+              <Form.Group controlId="Title Input">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="title"
+                  placeholder="Ex. Arrival Day"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a title.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Date Input">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="date"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a date.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Attending">
+                <Form.Label>Attending</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="attending"
+                  placeholder="Ex. Daenerys, Joffrey, Cersei"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter some attendees.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Row>
+                <Form.Group>
+                  <Button className="modal-button" aria-label="submit" name="dayMaker" type="submit">Submit</Button>
+                  <Button className="modal-button" aria-label="close window" onClick={this.closeForm}>Close</Button>
+                </Form.Group>
+              </Form.Row>
+            </Form>
+          </ReactModal>
+        </>
+      )
+    }
 
     if (!displayItinerary) {
       return (
         <>
           <h1 className="go-journey">Go Journey!</h1>
+          <Button aria-label="add a day" className="trip-button" name="addDay" onClick={this.displayModal}>Add a Day</Button>
+          <ReactModal
+            isOpen={displayDayMaker}
+            contentLabel="Plan a Journey!"
+            style={{
+              overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              content: {
+                backgroundColor: '#bcb8b1',
+                fontFamily: 'Crimson Pro, serif',
+              },
+            }}
+          >
+            <Form onSubmit={this.makeDay}>
+              <Form.Group controlId="Title Input">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="title"
+                  placeholder="Ex. Arrival Day"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a title.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Date Input">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="date"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a date.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Attending">
+                <Form.Label>Attending</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="attending"
+                  placeholder="Ex. Daenerys, Joffrey, Cersei"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter some attendees.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Row>
+                <Form.Group>
+                  <Button className="modal-button" aria-label="submit" name="dayMaker" type="submit">Submit</Button>
+                  <Button className="modal-button" aria-label="close window" onClick={this.closeForm}>Close</Button>
+                </Form.Group>
+              </Form.Row>
+            </Form>
+          </ReactModal>
           <Row md={4}>
             <Col>
               <Container className="days">
-                <DaysList days={trip.days} dayId={dayId} viewItinerary={this.handleClick} />
+                <DaysList days={days} dayId={dayId} viewItinerary={this.handleClick} />
                 <Button aria-label="back" className="back-button" name="back" onClick={setShowTrip}>Back</Button>
               </Container>
             </Col>
@@ -96,10 +270,68 @@ class Overview extends React.Component {
       return (
         <>
         <h1 className="go-journey">Go Journey!</h1>
+        <Button aria-label="add a day" className="trip-button" name="addDay" onClick={this.displayModal}>Add a Day</Button>
+          <ReactModal
+            isOpen={displayDayMaker}
+            contentLabel="Plan a Journey!"
+            style={{
+              overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              content: {
+                backgroundColor: '#bcb8b1',
+                fontFamily: 'Crimson Pro, serif',
+              },
+            }}
+          >
+            <Form onSubmit={this.makeDay}>
+              <Form.Group controlId="Title Input">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="title"
+                  placeholder="Ex. Arrival Day"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a title.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Date Input">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="date"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a date.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Attending">
+                <Form.Label>Attending</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="attending"
+                  placeholder="Ex. Daenerys, Joffrey, Cersei"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter some attendees.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Row>
+                <Form.Group>
+                  <Button className="modal-button" aria-label="submit" name="dayMaker" type="submit">Submit</Button>
+                  <Button className="modal-button" aria-label="close window" onClick={this.closeForm}>Close</Button>
+                </Form.Group>
+              </Form.Row>
+            </Form>
+          </ReactModal>
         <Row md={4}>
           <Col>
             <Container className="days">
-              <DaysList days={trip.days} dayId={dayId} viewItinerary={this.handleClick} />
+              <DaysList days={days} dayId={dayId} viewItinerary={this.handleClick} />
               <Button aria-label="back" className="back-button" name="back" onClick={setShowTrip}>Back</Button>
             </Container>
           </Col>
@@ -110,7 +342,7 @@ class Overview extends React.Component {
             </Container>
           </Col>
           <Col>
-            <Form className="plan-maker" onSubmit={this.handleSubmit}>
+            <Form className="plan-maker" name="planMaker" onSubmit={this.handleSubmit}>
               <Form.Group controlId="titleInput">
                 <Form.Label>
                   Title of Plan
@@ -139,7 +371,7 @@ class Overview extends React.Component {
                 <Form.Control type="text" name="attending" required placeholder="Ex: Johnathan, David, Mitchel" />
               </Form.Group>
               <Row>
-                <Button aria-label="submit form" className="plan-button" type="submit">Submit Plan</Button>
+                <Button aria-label="submit form" className="plan-button" name="planMaker" type="submit">Submit Plan</Button>
                 <Button aria-label="close form" className="plan-button" onClick={this.closeForm}>Close Form</Button>
               </Row>
             </Form>
@@ -151,10 +383,68 @@ class Overview extends React.Component {
       return (
         <>
         <h1 className="go-journey">Go Journey!</h1>
+        <Button aria-label="add a day" className="trip-button" name="addDay" onClick={this.displayModal}>Add a Day</Button>
+          <ReactModal
+            isOpen={displayDayMaker}
+            contentLabel="Plan a Journey!"
+            style={{
+              overlay: {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+              content: {
+                backgroundColor: '#bcb8b1',
+                fontFamily: 'Crimson Pro, serif',
+              },
+            }}
+          >
+            <Form onSubmit={this.makeDay}>
+              <Form.Group controlId="Title Input">
+                <Form.Label>Title</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="title"
+                  placeholder="Ex. Arrival Day"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a title.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Date Input">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  type="date"
+                  name="date"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter a date.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Group controlId="Attending">
+                <Form.Label>Attending</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  name="attending"
+                  placeholder="Ex. Daenerys, Joffrey, Cersei"
+                />
+                <Form.Control.Feedback>Looks Good!</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please enter some attendees.</Form.Control.Feedback>
+              </Form.Group>
+
+              <Form.Row>
+                <Form.Group>
+                  <Button className="modal-button" aria-label="submit" name="dayMaker" type="submit">Submit</Button>
+                  <Button className="modal-button" aria-label="close window" onClick={this.closeForm}>Close</Button>
+                </Form.Group>
+              </Form.Row>
+            </Form>
+          </ReactModal>
         <Row md={4}>
           <Col>
             <Container className="days">
-              <DaysList days={trip.days} dayId={dayId} viewItinerary={this.handleClick} />
+              <DaysList days={days} dayId={dayId} viewItinerary={this.handleClick} />
               <Button aria-label="back" className="back-button" name="back" onClick={setShowTrip}>Back</Button>
             </Container>
           </Col>
