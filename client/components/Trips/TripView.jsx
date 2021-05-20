@@ -12,7 +12,6 @@ const TripView = ( { trip, setShowTrip, displayModal } ) => {
   return (
     <Container className="trip-view">
       <Row>
-        {console.log(trip)}
         <h3>Our {trip.location} Vacation!</h3>
       </Row>
       <Row>

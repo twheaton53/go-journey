@@ -1,6 +1,7 @@
 import React from 'react';
 import { Collapse, Card, Container, Col, Row, Button, Form } from 'react-bootstrap';
 import ReactModal from 'react-modal';
+import moment from 'moment';
 import DaysList from './DaysList.jsx';
 import ItineraryList from './ItineraryList.jsx';
 
@@ -75,8 +76,13 @@ class Overview extends React.Component {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const formDataObj = Object.fromEntries(formData.entries());
+    const formTime = formDataObj.time;
+
+    const adjustedDate = moment(formTime, ['H:mm a', 'hh:mm']).format('LT');
+    formDataObj.time = adjustedDate;
 
     const newItinerary = itinerary.concat(formDataObj);
+
     this.setState({
       itinerary: newItinerary,
       displayPlanMaker: false
@@ -102,7 +108,7 @@ class Overview extends React.Component {
     const dateObj = new Date(formDataObj.date);
     const date = dateObj.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
 
-    const attendingArray = formDataObj.attending.split(' ');
+    const attendingArray = formDataObj.attending.split(',');
 
     const daysObj = {
       id: count,
@@ -111,21 +117,25 @@ class Overview extends React.Component {
       attending: attendingArray,
       itinerary: []
     }
-
-    const newDays = days.concat(daysObj);
-    console.log(newDays);
+    if (days.length === 0) {
+      console.log('inside first if')
+      var newDays = [].concat(daysObj);
+      console.log('newDays is ', newDays)
+    } else {
+      var newDays = days.concat(daysObj);
+    }
+    console.log('newDays is (above setState), ', newDays);
     this.setState({
       days: newDays,
       displayDayMaker: false
-    });
-  }
+    }, () => console.log(newDays));
+    }
 
   render() {
     const { trip, days, displayItinerary, displayPlanMaker, displayDayMaker, itinerary, dayId } = this.state;
-    console.log(trip);
     const { setShowTrip } = this.props;
 
-    if(trip.days.length === 0) {
+    if(days.length === 0) {
       return (
         <>
           <h1 className="go-journey">Go Journey!</h1>
@@ -144,7 +154,7 @@ class Overview extends React.Component {
               },
             }}
           >
-            <Form onSubmit={this.makeDay}>
+            <Form onSubmit={this.makeDay} autocomplete="off">
               <Form.Group controlId="Title Input">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -210,7 +220,7 @@ class Overview extends React.Component {
               },
             }}
           >
-            <Form onSubmit={this.makeDay}>
+            <Form onSubmit={this.makeDay} autocomplete="off">
               <Form.Group controlId="Title Input">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -284,7 +294,7 @@ class Overview extends React.Component {
               },
             }}
           >
-            <Form onSubmit={this.makeDay}>
+            <Form onSubmit={this.makeDay} autocomplete="off">
               <Form.Group controlId="Title Input">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
@@ -342,7 +352,7 @@ class Overview extends React.Component {
             </Container>
           </Col>
           <Col>
-            <Form className="plan-maker" name="planMaker" onSubmit={this.handleSubmit}>
+            <Form className="plan-maker" name="planMaker" onSubmit={this.handleSubmit} autocomplete="off">
               <Form.Group controlId="titleInput">
                 <Form.Label>
                   Title of Plan
@@ -354,7 +364,7 @@ class Overview extends React.Component {
                 <Form.Label>
                   Time of Plan
                 </Form.Label>
-                <Form.Control type="text" name="time" required placeholder="Ex: 1:35PM" />
+                <Form.Control type="time" name="time" required placeholder="Ex: 1:35PM" />
               </Form.Group>
 
               <Form.Group controlId="notesInput">
@@ -397,7 +407,7 @@ class Overview extends React.Component {
               },
             }}
           >
-            <Form onSubmit={this.makeDay}>
+            <Form onSubmit={this.makeDay} autcomplete="off">
               <Form.Group controlId="Title Input">
                 <Form.Label>Title</Form.Label>
                 <Form.Control

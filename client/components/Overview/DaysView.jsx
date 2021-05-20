@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Collapse, Row, Col, Container, Card } from 'react-bootstrap';
 
 const DaysView = ( { day, viewItinerary, dayId } ) => {
-  console.log('day in DaysView is ', day);
   const [open, setOpen] = useState(false);
   const [itinerary, setItinerary] = useState(day.itinerary);
 

@@ -56,8 +56,6 @@ class App extends React.Component {
     const diffInTime = endDate.getTime() - startDate.getTime();
     const diffInDays = Math.round(diffInTime / oneDay);
 
-    console.log(formDataObj);
-
     const tripObj = {
       location: formDataObj.destination,
       details: {
@@ -114,8 +112,6 @@ class App extends React.Component {
   handleClick = (e) => {
     e.preventDefault();
     const { trips } = this.state;
-    console.log('target name is ,', e.target.name)
-    console.log('Trips array is ', this.state.trips)
 
     if (e.target.name === 'back') {
       this.setState({
@@ -127,7 +123,6 @@ class App extends React.Component {
       for (const property in trips) {
         if (trips[property].location === e.target.name) {
           selectedTrip = trips[property];
-          console.log('selected trip is ', selectedTrip)
         }
       }
       this.setState({
